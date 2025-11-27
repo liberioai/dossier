@@ -5,20 +5,20 @@ Thanks for your interest in contributing!
 ## How to Contribute
 
 1. Fork the repo
-2. Add or improve dossiers in `examples/`
+2. Add or improve workflows in `workflows/`
 3. Submit a PR
 
-## Adding a Dossier
+## Adding a Workflow
 
 - Use the `.ds.md` extension
-- Place in the appropriate `examples/` subdirectory
+- Place in the appropriate `workflows/` subdirectory
 - Include clear objectives, steps, and validation criteria
 - Test with an LLM before submitting
 
-## Dossier Structure
+## Workflow Structure
 
 ```markdown
-# Dossier: [Name]
+# Workflow: [Name]
 
 ## Objective
 What this accomplishes
