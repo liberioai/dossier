@@ -1,4 +1,4 @@
----workflow
+---
 {
   "schema_version": "1.0.0",
   "title": "README Reality Check",
