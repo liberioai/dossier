@@ -39,8 +39,6 @@ htmlcov/
 .ruff_cache/
 .pytype/
 
-# UV
-uv.lock
 
 # IDE
 .vscode/
