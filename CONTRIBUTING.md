@@ -34,7 +34,7 @@ What must exist before running
 How to verify success
 ```
 
-Optionally include JSON frontmatter for tooling support (see `dossier-schema.json`).
+Include JSON frontmatter matching `workflows/workflow-schema.json`. Run `make build` to validate.
 
 ## Questions?
 
