@@ -13,6 +13,10 @@ A dossier is a markdown file with a specific structure that AI agents (Claude, C
 | [workflows](./workflows/) | Step-by-step task automation |
 | contexts | Conversation starters and personas (coming soon) |
 
+## Creating Workflows
+
+Use the [create-workflow](./workflows/create-workflow.ds.md) workflow to create new workflows that pass validation.
+
 ## Development
 
 ### Prerequisites
