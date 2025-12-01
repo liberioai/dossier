@@ -1,0 +1,377 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/liberioai/dossier/workflows/schema/v1.0.0",
+  "title": "Workflow Schema",
+  "description": "JSON Schema for workflow frontmatter metadata",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "title",
+    "version",
+    "status",
+    "objective"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Version of the workflow schema",
+      "const": "1.0.0"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of this workflow",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "status": {
+      "type": "string",
+      "description": "Lifecycle status",
+      "enum": ["draft", "stable", "deprecated"]
+    },
+    "objective": {
+      "type": "string",
+      "description": "Clear statement of what this workflow accomplishes",
+      "minLength": 10,
+      "maxLength": 500
+    },
+    "category": {
+      "type": "array",
+      "description": "Categories for organization",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "tags": {
+      "type": "array",
+      "description": "Free-form tags for searchability",
+      "items": {
+        "type": "string"
+      }
+    },
+    "authors": {
+      "type": "array",
+      "description": "Workflow authors",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string", "format": "email" }
+        }
+      }
+    },
+    "license": {
+      "type": "string",
+      "description": "License for this workflow"
+    },
+    "tools_required": {
+      "type": "array",
+      "description": "Tools that must be available",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tool or command name"
+          },
+          "version": {
+            "type": "string",
+            "description": "Minimum version required"
+          },
+          "check_command": {
+            "type": "string",
+            "description": "Command to verify availability"
+          }
+        }
+      }
+    },
+    "estimated_duration": {
+      "type": "object",
+      "description": "Estimated time to complete",
+      "properties": {
+        "min_minutes": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_minutes": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "risk_level": {
+      "type": "string",
+      "description": "Risk level of this workflow",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "risk_factors": {
+      "type": "array",
+      "description": "Specific risk factors",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requires_approval": {
+      "type": "boolean",
+      "description": "Whether user approval is required before execution"
+    },
+    "destructive_operations": {
+      "type": "array",
+      "description": "List of destructive operations this workflow performs",
+      "items": {
+        "type": "string"
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "description": "Relationships with other workflows",
+      "properties": {
+        "preceded_by": {
+          "type": "array",
+          "description": "Workflows that should run before this one",
+          "items": {
+            "type": "object",
+            "required": ["workflow"],
+            "properties": {
+              "workflow": {
+                "type": "string",
+                "description": "Name or path of the preceding workflow"
+              },
+              "condition": {
+                "type": "string",
+                "enum": ["required", "optional", "suggested"]
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "followed_by": {
+          "type": "array",
+          "description": "Workflows that should run after this one",
+          "items": {
+            "type": "object",
+            "required": ["workflow"],
+            "properties": {
+              "workflow": {
+                "type": "string"
+              },
+              "condition": {
+                "type": "string",
+                "enum": ["required", "suggested"]
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "alternatives": {
+          "type": "array",
+          "description": "Alternative workflows for similar goals",
+          "items": {
+            "type": "object",
+            "required": ["workflow"],
+            "properties": {
+              "workflow": {
+                "type": "string"
+              },
+              "when_to_use": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "conflicts_with": {
+          "type": "array",
+          "description": "Workflows that conflict with this one",
+          "items": {
+            "type": "object",
+            "required": ["workflow"],
+            "properties": {
+              "workflow": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        },
+        "can_run_parallel_with": {
+          "type": "array",
+          "description": "Workflows that can run in parallel",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "description": "Input parameters required",
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "type": { "type": "string" },
+              "validation": { "type": "string", "description": "Regex or validation rules" },
+              "example": { "type": "string" }
+            }
+          }
+        },
+        "optional": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "type": { "type": "string" },
+              "default": {},
+              "example": { "type": "string" }
+            }
+          }
+        },
+        "from_workflows": {
+          "type": "array",
+          "description": "Inputs that come from other workflow outputs",
+          "items": {
+            "type": "object",
+            "required": ["source_workflow", "output_name"],
+            "properties": {
+              "source_workflow": { "type": "string" },
+              "output_name": { "type": "string" },
+              "usage": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "description": "Outputs produced",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "description"],
+            "properties": {
+              "path": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "purpose"],
+            "properties": {
+              "path": { "type": "string" },
+              "purpose": { "type": "string" }
+            }
+          }
+        },
+        "configuration": {
+          "type": "array",
+          "description": "Configuration values produced",
+          "items": {
+            "type": "object",
+            "required": ["key", "description"],
+            "properties": {
+              "key": { "type": "string" },
+              "description": { "type": "string" },
+              "consumed_by": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "state_changes": {
+          "type": "array",
+          "description": "State changes made by workflow",
+          "items": {
+            "type": "object",
+            "required": ["description"],
+            "properties": {
+              "description": { "type": "string" },
+              "affects": { "type": "string" },
+              "reversible": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "prerequisites": {
+      "type": "array",
+      "description": "Prerequisites that must exist before execution",
+      "items": {
+        "type": "object",
+        "required": ["description"],
+        "properties": {
+          "description": { "type": "string" },
+          "check": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["tool", "file", "environment", "permission", "other"]
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "description": "Success criteria",
+      "properties": {
+        "success_criteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "verification_commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["command", "expected"],
+            "properties": {
+              "command": { "type": "string" },
+              "expected": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "description": "Rollback information",
+      "properties": {
+        "supported": { "type": "boolean" },
+        "procedure": { "type": "string" },
+        "automated": { "type": "boolean" },
+        "backup_required": { "type": "boolean" }
+      }
+    },
+    "coupling": {
+      "type": "object",
+      "description": "Coupling level with other workflows",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["tight", "medium", "loose", "none"]
+        },
+        "details": { "type": "string" }
+      }
+    }
+  }
+}

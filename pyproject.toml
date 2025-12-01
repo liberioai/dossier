@@ -1,0 +1,88 @@
+[project]
+name = "dossier"
+version = "0.1.0"
+description = "Structured instruction files for AI agents"
+authors = [
+    {name = "Liberio AI", email = "team@liberio.ai"}
+]
+requires-python = ">=3.12"
+dependencies = [
+    "jsonschema>=4.0.0",
+    "python-frontmatter>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+    "pytest>=8.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["utils"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+indent-width = 4
+
+[tool.ruff.lint]
+select = [
+    # Core Python (pycodestyle, pyflakes, etc.)
+    "E", "F", "I", "W",
+    # Code quality & style
+    "B", "C4", "UP", "N", "ARG", "PIE", "SIM", "TCH", "Q", "RUF", "ERA", "PT", "T20", "A",
+    # Advanced linting
+    "PL", "FBT", "FURB", "LOG", "PTH", "BLE", "PERF",
+    # Security & exceptions
+    "S", "EM", "TRY", "RSE",
+    # Imports & formatting
+    "COM", "ICN", "ISC",
+    # Datetime & returns
+    "DTZ", "RET"
+]
+ignore = ["EM101", "TRY003", "COM812"]
+fixable = ["ALL"]
+unfixable = []
+
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "examples/*",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/test_*.py" = ["S101", "S105", "S106"]
+"**/tests/*.py" = ["S101", "S105", "S106"]
+"test/*.py" = ["T201", "S603", "PLW1510"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["utils"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.pytest.ini_options]
+testpaths = ["utils/tests"]
+pythonpath = ["."]
