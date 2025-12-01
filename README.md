@@ -1,12 +1,23 @@
 # Dossier
 
-Structured workflow files (`.ds.md`) for AI agents.
+Structured workflow files for AI agents.
 
-## What is a Workflow?
+## The Problem
 
-A workflow is a markdown file with JSON frontmatter that AI agents can follow to complete tasks. Instead of writing scripts, you write clear instructions with objectives, steps, and validation criteria.
+When you ask an AI agent to "set up a Python project" or "review this PR", the quality depends entirely on how well you prompt it. Different people get different results. Knowledge isn't shared or reusable.
 
-### Example
+## The Solution
+
+Dossier provides `.ds.md` files—markdown documents with structured frontmatter that AI agents can follow consistently. Instead of crafting prompts from scratch, you point your agent at a workflow file that contains:
+
+- **Objective**: What the workflow accomplishes
+- **Inputs**: What parameters it accepts
+- **Steps**: Clear instructions the agent follows
+- **Validation**: How to verify success
+
+Workflows are portable across projects, shareable across teams, and version-controlled like code.
+
+## Quick Example
 
 ```markdown
 ---
@@ -15,66 +26,138 @@ A workflow is a markdown file with JSON frontmatter that AI agents can follow to
   "title": "Setup Python Project",
   "version": "1.0.0",
   "status": "stable",
-  "objective": "Initialize a Python project with uv, ruff, and pytest"
+  "objective": "Initialize a Python project with uv, ruff, and pytest",
+  "inputs": {
+    "required": [
+      {"name": "project_name", "description": "Name of the project", "type": "string"}
+    ]
+  }
 }
 ---
 # Setup Python Project
 
+Initialize a production-ready Python project.
+
 ## Steps
 
-1. **Initialize project** - Run `uv init` to create pyproject.toml
-2. **Add dev dependencies** - Run `uv add --dev ruff pytest`
-3. **Create structure** - Create `src/` and `tests/` directories
+1. **Initialize project**
+   - Run `uv init {project_name}`
+   - This creates pyproject.toml with basic metadata
+
+2. **Add dev dependencies**
+   - Run `uv add --dev ruff pytest`
+   - These provide linting and testing
+
+3. **Create structure**
+   - Create `src/{project_name}/` for source code
+   - Create `tests/` for test files
+   - Add `__init__.py` to both directories
+
+## Validation
+
+- [ ] `pyproject.toml` exists with correct project name
+- [ ] `uv run pytest` executes without import errors
+- [ ] `uv run ruff check .` passes
 ```
 
-## Architecture
+## Try It Now
+
+### Option 1: MCP Server (Recommended)
+
+Install the MCP server to use workflows as tools in Claude Code or Cursor:
+
+```bash
+# Claude Code
+claude mcp add -s user dossier -- uvx --from git+https://github.com/liberioai/dossier#subdirectory=mcp-server dossier-mcp
+```
+
+Then ask: *"Use the create-workflow tool to make a workflow for reviewing security issues"*
+
+### Option 2: Direct Use
+
+Point any AI agent at a workflow file:
+
+```
+Follow the workflow at:
+https://raw.githubusercontent.com/liberioai/dossier/main/workflows/documentation/readme-reality-check.ds.md
+
+Analyze this project and compare what the README claims vs what's actually implemented.
+```
+
+## Available Workflows
+
+| Workflow | Description |
+|----------|-------------|
+| [create-workflow](./workflows/create-workflow.ds.md) | Create new workflow files that pass validation |
+| [readme-reality-check](./workflows/documentation/readme-reality-check.ds.md) | Audit README claims against actual code |
+
+## When to Use Workflows
+
+**Use workflows when:**
+- The task requires multiple steps with decisions
+- You want consistent results across runs
+- The process should be shareable and reusable
+- Success criteria need to be explicit
+
+**Use regular prompts when:**
+- It's a one-off question or simple task
+- The task is highly specific to your current context
+- You're exploring or brainstorming
+
+## Project Structure
 
 ```
 workflows/                     # Workflow files (.ds.md)
 ├── workflow-schema.json       # JSON Schema for frontmatter validation
-├── create-workflow.ds.md      # Meta-workflow to create new workflows
-└── documentation/             # Category folders
+├── create-workflow.ds.md      # Meta-workflow for creating workflows
+└── documentation/
     └── readme-reality-check.ds.md
 
 utils/
-└── validate_workflow.py       # Validates workflows against schema
+├── validate_workflow.py       # Validates workflows against schema
+└── tests/
 
 mcp-server/                    # MCP server (separate Python project)
-└── server.py                  # Exposes workflows as MCP tools
+├── server.py                  # Exposes workflows as tools
+└── README.md
 ```
 
-Key files:
-- [workflows/workflow-schema.json](./workflows/workflow-schema.json) - Schema definition
-- [workflows/create-workflow.ds.md](./workflows/create-workflow.ds.md) - Create new workflows
-- [utils/validate_workflow.py](./utils/validate_workflow.py) - Validation script
-- [mcp-server/server.py](./mcp-server/server.py) - MCP server
+## Creating Your Own Workflows
 
-## MCP Server
+1. **Start with the meta-workflow**
+   ```
+   Use the create-workflow tool with description: "A workflow to [your task]"
+   ```
 
-Use workflows directly in Claude Code or Cursor via the MCP server. The server exposes each workflow as an MCP tool.
+2. **Or copy the template manually**
+   - Copy an existing workflow from `workflows/`
+   - Update the frontmatter (title, objective, inputs, etc.)
+   - Write clear steps in the markdown body
+   - Add validation criteria
 
-### Claude Code
+3. **Validate your workflow**
+   ```bash
+   uv run python utils/validate_workflow.py workflows/your-workflow.ds.md
+   ```
 
-```bash
-claude mcp add -s user dossier -- uvx --from git+https://github.com/liberioai/dossier#subdirectory=mcp-server dossier-mcp
-```
+## Schema
 
-### Cursor
+Workflows use JSON frontmatter validated against [workflow-schema.json](./workflows/workflow-schema.json).
 
-Add to your MCP settings:
+**Required fields:**
+- `schema_version`: Always `"1.0.0"`
+- `title`: Human-readable name
+- `version`: Semantic version of the workflow
+- `status`: One of `draft`, `stable`, `deprecated`
+- `objective`: Clear statement of what it accomplishes
 
-```json
-{
-  "mcpServers": {
-    "dossier": {
-      "command": "uvx",
-      "args": ["--from", "git+https://github.com/liberioai/dossier#subdirectory=mcp-server", "dossier-mcp"]
-    }
-  }
-}
-```
+**Optional fields:**
+- `inputs`: Required and optional parameters
+- `outputs`: Files or artifacts produced
+- `validation`: Success criteria and verification commands
+- `category`, `tags`: For organization
 
-See [mcp-server/README.md](./mcp-server/README.md) for details.
+See the [schema file](./workflows/workflow-schema.json) for all available fields.
 
 ## Development
 
@@ -94,13 +177,13 @@ make setup
 ### Commands
 
 ```bash
-make test      # Format + lint + run all tests
-make validate  # Validate workflow files against schema
+make test      # Format, lint, and run all tests
+make validate  # Validate all workflow files against schema
 ```
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on adding workflows or improving the tooling.
 
 ## License
 
