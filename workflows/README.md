@@ -12,3 +12,4 @@ Use [create-workflow](./create-workflow.ds.md) to create new workflows that pass
 |----------|-------------|
 | [documentation](./documentation/) | README checks, doc generation, audits |
 | [development](./development/) | Code analysis, refactoring, patterns |
+| [setup](./setup/) | Project setup, configuration, environment |
