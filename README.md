@@ -126,10 +126,7 @@ Follow this workflow: https://raw.githubusercontent.com/liberioai/dossier/main/w
 
 ## Available Workflows
 
-| Workflow | Description |
-|----------|-------------|
-| [create-workflow](./workflows/create-workflow.ds.md) | Create new workflow files that pass validation |
-| [readme-reality-check](./workflows/documentation/readme-reality-check.ds.md) | Audit README claims against actual code |
+See the [workflows directory](./workflows/) for all available workflows, organized by category.
 
 ## When to Use Workflows
 

@@ -10,6 +10,6 @@ Use [create-workflow](./create-workflow.ds.md) to create new workflows that pass
 
 | Category | Description |
 |----------|-------------|
-| [documentation](./documentation/) | README checks, doc generation, audits |
-| [development](./development/) | Code analysis, refactoring, patterns |
-| [setup](./setup/) | Project setup, configuration, environment |
+| [development](./development/) | Workflows for code analysis, refactoring, and development best practices |
+| [documentation](./documentation/) | Workflows for documentation audits, generation, and maintenance |
+| [setup](./setup/) | Workflows for project setup, configuration, and environment validation |

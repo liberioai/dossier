@@ -6,5 +6,5 @@ Workflows for documentation audits, generation, and maintenance.
 
 | Workflow | Description |
 |----------|-------------|
-| [readme-reality-check](./readme-reality-check.ds.md) | Compare README promises vs actual implementation |
-| [onboarding-friction](./onboarding-friction.ds.md) | Assess new contributor experience and friction points |
+| [onboarding-friction](./onboarding-friction.ds.md) | Identify pain points and confusion for new contributors trying to understand and work with the project |
+| [readme-reality-check](./readme-reality-check.ds.md) | Compare what the README promises versus what's actually implemented in the codebase |
