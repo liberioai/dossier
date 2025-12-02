@@ -73,6 +73,7 @@ exclude = [
 "**/test_*.py" = ["S101", "S105", "S106"]
 "**/tests/*.py" = ["S101", "S105", "S106"]
 "test/*.py" = ["T201", "S603", "PLW1510"]
+"utils/generate_readme.py" = ["T201"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["utils"]

@@ -13,3 +13,7 @@ done
 
 echo ""
 echo "Validated $count workflow(s)"
+
+echo ""
+echo "=== Checking README sync ==="
+uv run python utils/generate_readme.py --check
