@@ -62,26 +62,66 @@ Initialize a production-ready Python project.
 
 ## Try It Now
 
-### Option 1: MCP Server (Recommended)
-
-Install the MCP server to use workflows as tools in Claude Code or Cursor:
-
-```bash
-# Claude Code
-claude mcp add -s user dossier -- uvx --from git+https://github.com/liberioai/dossier#subdirectory=mcp-server dossier-mcp
-```
-
-Then ask: *"Use the create-workflow tool to make a workflow for reviewing security issues"*
-
-### Option 2: Direct Use
-
-Point any AI agent at a workflow file:
+Paste this into any AI agent (Claude, ChatGPT, etc.) to audit a project's README:
 
 ```
-Follow the workflow at:
+Follow this workflow to analyze the current project:
 https://raw.githubusercontent.com/liberioai/dossier/main/workflows/documentation/readme-reality-check.ds.md
+```
 
-Analyze this project and compare what the README claims vs what's actually implemented.
+This workflow compares what the README promises vs what's actually implemented, finding gaps, outdated claims, and missing documentation.
+
+## Installation
+
+### MCP Server (Recommended)
+
+Install the MCP server to use workflows as tools in Claude Code or Cursor.
+
+**Claude Code:**
+```bash
+# Using uvx (comes with uv)
+claude mcp add -s user dossier -- uvx --from git+https://github.com/liberioai/dossier#subdirectory=mcp-server dossier-mcp
+
+# Using pipx
+claude mcp add -s user dossier -- pipx run --spec git+https://github.com/liberioai/dossier#subdirectory=mcp-server dossier-mcp
+```
+
+**Cursor** (add to `~/.cursor/mcp.json`):
+```json
+{
+  "mcpServers": {
+    "dossier": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/liberioai/dossier#subdirectory=mcp-server", "dossier-mcp"],
+      "env": {
+        "GITHUB_TOKEN": "<your-token-here>"
+      }
+    }
+  }
+}
+```
+
+Or with pipx:
+```json
+{
+  "mcpServers": {
+    "dossier": {
+      "command": "pipx",
+      "args": ["run", "--spec", "git+https://github.com/liberioai/dossier#subdirectory=mcp-server", "dossier-mcp"],
+      "env": {
+        "GITHUB_TOKEN": "<your-token-here>"
+      }
+    }
+  }
+}
+```
+
+### Direct Use (No Installation)
+
+You can use any workflow without installing the MCP server—just point your AI agent at the raw file URL:
+
+```
+Follow this workflow: https://raw.githubusercontent.com/liberioai/dossier/main/workflows/{path}.ds.md
 ```
 
 ## Available Workflows

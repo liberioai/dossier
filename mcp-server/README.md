@@ -26,20 +26,33 @@ Claude: [Calls readme-reality-check tool]
 
 Tools are discovered automatically from the `workflows/` directory on GitHub. New workflows appear as tools without server updates.
 
-## Installation
+## Try It Now
 
-### Claude Code
+Paste this into any AI agent (Claude, ChatGPT, etc.) to audit a project's README:
 
-```bash
-claude mcp add -s user dossier -- uvx --from git+https://github.com/liberioai/dossier#subdirectory=mcp-server dossier-mcp
+```
+Follow this workflow to analyze the current project:
+https://raw.githubusercontent.com/liberioai/dossier/main/workflows/documentation/readme-reality-check.ds.md
 ```
 
-If you hit GitHub rate limits, set `GITHUB_TOKEN` in your environment or add it to the server config in `~/.claude/settings.json`.
+This workflow compares what the README promises vs what's actually implemented, finding gaps, outdated claims, and missing documentation.
 
-### Cursor
+## Installation
 
-Add to your MCP settings (usually `~/.cursor/mcp.json`):
+### MCP Server (Recommended)
 
+Install the MCP server to use workflows as tools in Claude Code or Cursor.
+
+**Claude Code:**
+```bash
+# Using uvx (comes with uv)
+claude mcp add -s user dossier -- uvx --from git+https://github.com/liberioai/dossier#subdirectory=mcp-server dossier-mcp
+
+# Using pipx
+claude mcp add -s user dossier -- pipx run --spec git+https://github.com/liberioai/dossier#subdirectory=mcp-server dossier-mcp
+```
+
+**Cursor** (add to `~/.cursor/mcp.json`):
 ```json
 {
   "mcpServers": {
@@ -47,21 +60,34 @@ Add to your MCP settings (usually `~/.cursor/mcp.json`):
       "command": "uvx",
       "args": ["--from", "git+https://github.com/liberioai/dossier#subdirectory=mcp-server", "dossier-mcp"],
       "env": {
-        "GITHUB_TOKEN": "your_token_here"
+        "GITHUB_TOKEN": "<your-token-here>"
       }
     }
   }
 }
 ```
 
-> **Note**: `GITHUB_TOKEN` is recommended to avoid rate limiting. Without it, you're limited to 60 GitHub API requests/hour, which can cause tool listing to fail.
+Or with pipx:
+```json
+{
+  "mcpServers": {
+    "dossier": {
+      "command": "pipx",
+      "args": ["run", "--spec", "git+https://github.com/liberioai/dossier#subdirectory=mcp-server", "dossier-mcp"],
+      "env": {
+        "GITHUB_TOKEN": "<your-token-here>"
+      }
+    }
+  }
+}
+```
 
-### Other MCP Clients
+### Direct Use (No Installation)
 
-The server uses stdio transport. Configure your client to run:
+You can use any workflow without installing the MCP server—just point your AI agent at the raw file URL:
 
-```bash
-uvx --from git+https://github.com/liberioai/dossier#subdirectory=mcp-server dossier-mcp
+```
+Follow this workflow: https://raw.githubusercontent.com/liberioai/dossier/main/workflows/{path}.ds.md
 ```
 
 ## How It Works
