@@ -218,10 +218,6 @@ make test      # Format, lint, and run all tests
 make validate  # Validate all workflow files against schema
 ```
 
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on adding workflows or improving the tooling.
-
 ## License
 
 MIT
